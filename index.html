@@ -191,6 +191,7 @@ window.__WEB = true;
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
 <style>
   :root{
     --cream:#FAF7F2; --paper:#ffffff; --ink:#1c1210; --muted:#8a7d76; --faint:#b3a89f;
@@ -938,9 +939,18 @@ const WORLDCITIES=[{"n":"Shanghai","o":121.46,"a":31.22,"p":22315},{"n":"Istanbu
   let COUNTRYLBL=null, CITYLBL=null, DEMO=null, DEMOON=false;
   function hsh(s){ let h=2166136261; for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);} return (h>>>0); }
   function buildLabels(){
-    if(!COUNTRYLBL){ COUNTRYLBL=[]; try{ WORLD.features.forEach(ftr=>{ const nm=(typeof CNAMES!=="undefined")?CNAMES[String(+ftr.id)]:null; if(!nm)return; const area=d3.geoArea(ftr); if(area<0.0045)return; COUNTRYLBL.push({name:nm,c:d3.geoCentroid(ftr),area}); }); COUNTRYLBL.sort((a,b)=>b.area-a.area);}catch(e){COUNTRYLBL=[];} }
+    if(!COUNTRYLBL){ COUNTRYLBL=[]; try{ (WORLDHD?WORLDHD.land:WORLD).features.forEach(ftr=>{ const nm=(typeof CNAMES!=="undefined")?CNAMES[String(+ftr.id)]:null; if(!nm)return; const area=d3.geoArea(ftr); if(area<0.0045)return; let c=d3.geoCentroid(ftr); const g=ftr.geometry; if(g&&g.type==="MultiPolygon"){ let best=null,ba=-1; g.coordinates.forEach(pc=>{ const part={type:"Polygon",coordinates:pc}, ar=d3.geoArea(part); if(ar<6&&ar>ba){ba=ar;best=part;} }); if(best)c=d3.geoCentroid(best); } COUNTRYLBL.push({name:nm,c,area}); }); COUNTRYLBL.sort((a,b)=>b.area-a.area);}catch(e){COUNTRYLBL=[];} }
     { const cnt={}; allR().forEach(r=>{ if(CITYCO[r.plaats])cnt[r.plaats]=(cnt[r.plaats]||0)+1; }); CITYLBL=Object.keys(cnt).map(c=>({name:c,lon:CITYCO[c][0],lat:CITYCO[c][1],n:cnt[c]})).sort((a,b)=>b.n-a.n); }
     if(!DEMO && typeof WORLDCITIES!=="undefined"){ DEMO=[]; const nm=["Ristorante","Trattoria","Brasserie","Bistro","Osteria","Taverna","Grill House","Enoteca","La Piazza","Chez Marcel","Da Vinci","The Vine","Cantina","Le Jardin"]; WORLDCITIES.slice(0,260).forEach(c=>{ const k=(c.p>3000)?2:1; for(let j=0;j<k;j++){ const h=hsh(c.n+"#"+j), r=h%100; const col=r<72?"#b0343f":r<91?"#c9812a":"#3f7d5a"; const ja=((h>>>2)%1000)/1000-0.5, jb=((h>>>12)%1000)/1000-0.5; DEMO.push({name:nm[h%nm.length]+" "+c.n, lon:c.o+ja*0.6, lat:c.a+jb*0.4, col}); } }); }
+  }
+  let WORLDHD=null, HDLOADING=false, GLRO=null, GLRAF=0;
+  function loadHD(){
+    if(WORLDHD||HDLOADING||typeof topojson==="undefined"||typeof fetch==="undefined")return; HDLOADING=true;
+    fetch("/world-hd.json").then(r=>r.ok?r.json():null).then(t=>{ if(!t||!t.objects)return; const o=t.objects;
+      const all={type:"GeometryCollection",geometries:[...o.land50.geometries,...o.land10.geometries]};
+      WORLDHD={land:topojson.feature(t,all), coast:topojson.mesh(t,all,(a,b)=>a===b), borders:topojson.mesh(t,all,(a,b)=>a!==b), lakes:topojson.feature(t,o.lakes), prov:topojson.mesh(t,o.prov,(a,b)=>a!==b)};
+      COUNTRYLBL=null; if(GL&&GL.draw){ buildLabels(); GL.draw(); }
+    }).catch(()=>{ HDLOADING=false; });
   }
   function renderMap(){ initGlobe(); }
   function initGlobe(){
@@ -948,20 +958,24 @@ const WORLDCITIES=[{"n":"Shanghai","o":121.46,"a":31.22,"p":22315},{"n":"Istanbu
     if(typeof d3==="undefined"||typeof WORLD==="undefined"){ if(note)note.textContent="Kaart laadt…"; setTimeout(()=>{ if(typeof d3!=="undefined")initGlobe(); },400); return; }
     buildLabels();
     const cv=document.getElementById("globe"); if(!cv)return;
-    const wrap=cv.parentElement, W=wrap.clientWidth, H=wrap.clientHeight||480, dpr=window.devicePixelRatio||1;
-    cv.width=W*dpr; cv.height=H*dpr; cv.style.width=W+"px"; cv.style.height=H+"px";
-    const ctx=cv.getContext("2d"); ctx.scale(dpr,dpr);
+    const wrap=cv.parentElement, W=wrap.clientWidth, H=wrap.clientHeight||480, dpr=Math.max(1,window.devicePixelRatio||1);
+    if(!GLRO&&typeof ResizeObserver!=="undefined"){ let lw=0,lh=0; GLRO=new ResizeObserver(()=>{ const w=wrap.clientWidth,h=wrap.clientHeight; if(!w||!h||(w===lw&&h===lh))return; lw=w; lh=h; clearTimeout(GLRO._t); GLRO._t=setTimeout(initGlobe,60); }); GLRO.observe(wrap); }
+    if(!W){ return; }
+    loadHD();
+    cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); cv.style.width=W+"px"; cv.style.height=H+"px";
+    const ctx=cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.lineJoin="round"; ctx.lineCap="round";
+    const HL=1/dpr;
     const proj=d3.geoOrthographic().clipAngle(90).translate([W/2,H/2]);
     proj.scale(Math.min(W,H)*2.6).rotate([-5.4,-52.2]);
     if(GL){ if(GL.scale)proj.scale(GL.scale); if(GL.rotate)proj.rotate(GL.rotate); }
     const path=d3.geoPath(proj,ctx), grat=d3.geoGraticule10();
     const pts=mapPoints();
     function drawLabel(txt,x,y,size,fill,boxes){
-      ctx.font=size+"px Inter, sans-serif"; const w=ctx.measureText(txt).width, h=size;
+      ctx.font="500 "+size+"px Inter, system-ui, sans-serif"; const w=ctx.measureText(txt).width, h=size;
       const b=[x-w/2-2,y-h,x+w/2+2,y+3];
       for(const o of boxes){ if(b[0]<o[2]&&b[2]>o[0]&&b[1]<o[3]&&b[3]>o[1])return false; }
       boxes.push(b);
-      ctx.lineWidth=2.6; ctx.strokeStyle="rgba(255,255,255,.85)"; ctx.textAlign="center"; ctx.strokeText(txt,x,y);
+      ctx.lineWidth=3; ctx.strokeStyle="rgba(255,255,255,.92)"; ctx.textAlign="center"; ctx.strokeText(txt,x,y);
       ctx.fillStyle=fill; ctx.fillText(txt,x,y); return true;
     }
     function draw(){
@@ -977,26 +991,34 @@ const WORLDCITIES=[{"n":"Shanghai","o":121.46,"a":31.22,"p":22315},{"n":"Istanbu
       ctx.beginPath(); path({type:"Sphere"}); ctx.fillStyle=og; ctx.fill();
       // graticule
       ctx.beginPath(); path(grat); ctx.strokeStyle="rgba(120,140,150,.18)"; ctx.lineWidth=.5; ctx.stroke();
-      // land
-      ctx.beginPath(); path(WORLD); ctx.fillStyle="#f4efe7"; ctx.fill(); ctx.strokeStyle="#ddd3c6"; ctx.lineWidth=.6; ctx.stroke();
-      const r0=proj.rotate(), center=[-r0[0],-r0[1]], boxes=[];
+      // land (hoge resolutie zodra geladen)
+      if(WORLDHD){
+        ctx.beginPath(); path(WORLDHD.land); ctx.fillStyle="#f6f1e9"; ctx.fill();
+        ctx.beginPath(); path(WORLDHD.lakes); ctx.fillStyle="#d6e4ec"; ctx.fill(); ctx.strokeStyle="rgba(120,150,165,.35)"; ctx.lineWidth=HL; ctx.stroke();
+        if(R>2200){ ctx.beginPath(); path(WORLDHD.prov); ctx.strokeStyle="rgba(150,128,105,.28)"; ctx.lineWidth=Math.max(HL,.6); ctx.setLineDash([3,2.5]); ctx.stroke(); ctx.setLineDash([]); }
+        ctx.beginPath(); path(WORLDHD.borders); ctx.strokeStyle="rgba(150,128,105,.55)"; ctx.lineWidth=Math.max(HL,.7); ctx.stroke();
+        ctx.beginPath(); path(WORLDHD.coast); ctx.strokeStyle="rgba(95,120,135,.55)"; ctx.lineWidth=Math.max(HL,.75); ctx.stroke();
+      } else { ctx.beginPath(); path(WORLD); ctx.fillStyle="#f4efe7"; ctx.fill(); ctx.strokeStyle="#ddd3c6"; ctx.lineWidth=.6; ctx.stroke(); }
+      // rand van de bol
+      ctx.beginPath(); path({type:"Sphere"}); ctx.strokeStyle="rgba(95,120,135,.35)"; ctx.lineWidth=Math.max(HL,.8); ctx.stroke();
+      const r0=proj.rotate(), center=[-r0[0],-r0[1]], boxes=[], DR=Math.max(2.1,Math.min(4.2,R/1500));
       // country labels
       if(R<2600){ ctx.font="500 10px Inter, system-ui, sans-serif"; COUNTRYLBL.forEach(l=>{ if(d3.geoDistance(l.c,center)>Math.PI/2.05)return; const xy=proj(l.c); if(!xy)return; const size=l.area>0.03?12:10.5; drawLabel(l.name,xy[0],xy[1],size,"rgba(90,78,68,.72)",boxes); }); }
       // demo worldwide pins
       if(DEMOON&&DEMO){ DEMO.forEach(p=>{ if(d3.geoDistance([p.lon,p.lat],center)>Math.PI/2)return; if(MAPFILTER&&p.col!==MCOL[MAPFILTER-1])return; const xy=proj([p.lon,p.lat]); if(!xy)return; ctx.beginPath(); ctx.arc(xy[0],xy[1],2.5,0,6.283); ctx.fillStyle=p.col+"bb"; ctx.fill(); }); }
       // real restaurant dots
       pts.forEach(p=>{ if(d3.geoDistance([p.lon,p.lat],center)>Math.PI/2)return; const col=statusColor(p.k); if(MAPFILTER&&col!==MCOL[MAPFILTER-1])return; const xy=proj([p.lon,p.lat]); if(!xy)return;
-        ctx.beginPath(); ctx.arc(xy[0],xy[1],4.6,0,6.283); ctx.fillStyle=col+"33"; ctx.fill();
-        ctx.beginPath(); ctx.arc(xy[0],xy[1],3.2,0,6.283); ctx.fillStyle=col; ctx.fill(); ctx.strokeStyle="#fff"; ctx.lineWidth=.9; ctx.stroke(); });
+        ctx.beginPath(); ctx.arc(xy[0],xy[1],DR,0,6.283); ctx.fillStyle=col; ctx.fill(); ctx.strokeStyle="#fff"; ctx.lineWidth=Math.max(HL*1.5,.9); ctx.stroke(); });
       // city labels: restaurant cities (burgundy) + world cities with level-of-detail
       { const cb=boxes;
-        if(R>680){ CITYLBL.forEach(l=>{ if(d3.geoDistance([l.lon,l.lat],center)>Math.PI/2)return; const xy=proj([l.lon,l.lat]); if(!xy)return; drawLabel(l.name+" · "+l.n, xy[0], xy[1]-9, 11, "#7b1e3a", cb); }); }
+        if(R>680){ CITYLBL.forEach(l=>{ if(d3.geoDistance([l.lon,l.lat],center)>Math.PI/2)return; const xy=proj([l.lon,l.lat]); if(!xy)return; drawLabel(l.name+" · "+l.n, xy[0], xy[1]-DR-6, 11.5, "#6e1a33", cb); }); }
         if(typeof WORLDCITIES!=="undefined"){ const pm=R>3200?150:R>1700?450:R>850?1200:R>460?3200:8000; for(const c of WORLDCITIES){ if(c.p<pm)continue; if(d3.geoDistance([c.o,c.a],center)>Math.PI/2)continue; const xy=proj([c.o,c.a]); if(!xy)continue; ctx.beginPath(); ctx.arc(xy[0],xy[1],1.5,0,6.283); ctx.fillStyle="rgba(90,80,72,.45)"; ctx.fill(); drawLabel(c.n, xy[0], xy[1]-4, c.p>5000?11:10, "rgba(70,63,56,.85)", cb); } }
       }
     }
+    const redraw=()=>{ if(GLRAF)return; GLRAF=requestAnimationFrame(()=>{ GLRAF=0; draw(); }); };
     draw(); GL={proj,draw,pts,scale:proj.scale(),rotate:proj.rotate()};
-    d3.select(cv).call(d3.drag().on("drag",ev=>{ const k=70/proj.scale(), r=proj.rotate(); proj.rotate([r[0]+ev.dx*k, Math.max(-90,Math.min(90,r[1]-ev.dy*k))]); GL.rotate=proj.rotate(); draw(); }));
-    cv.onwheel=ev=>{ ev.preventDefault(); const sc=proj.scale()*(ev.deltaY<0?1.12:0.89); proj.scale(Math.max(180,Math.min(9000,sc))); GL.scale=proj.scale(); draw(); };
+    d3.select(cv).call(d3.drag().on("drag",ev=>{ const k=57/proj.scale(), r=proj.rotate(); proj.rotate([r[0]+ev.dx*k, Math.max(-90,Math.min(90,r[1]-ev.dy*k))]); GL.rotate=proj.rotate(); redraw(); }));
+    cv.onwheel=ev=>{ ev.preventDefault(); const f=Math.exp(-ev.deltaY*0.0015); const sc=Math.max(180,Math.min(14000,proj.scale()*f)); proj.scale(sc); GL.scale=sc; redraw(); };
     cv.onmousemove=ev=>{ const rc=cv.getBoundingClientRect(),mx=ev.clientX-rc.left,my=ev.clientY-rc.top; let best=null,bd=11; const r0=proj.rotate(),center=[-r0[0],-r0[1]];
       pts.forEach(p=>{ if(d3.geoDistance([p.lon,p.lat],center)>Math.PI/2)return; const col=statusColor(p.k); if(MAPFILTER&&col!==MCOL[MAPFILTER-1])return; const xy=proj([p.lon,p.lat]); if(!xy)return; const d=Math.hypot(xy[0]-mx,xy[1]-my); if(d<bd){bd=d;best={p,xy};} });
       const tip=document.getElementById("globe-tip"); if(best&&tip){ tip.textContent=best.p.r.naam+" — "+statusWord(best.p.k); tip.style.left=best.xy[0]+"px"; tip.style.top=best.xy[1]+"px"; tip.classList.add("show"); cv.style.cursor="pointer"; } else if(tip){ tip.classList.remove("show"); cv.style.cursor="grab"; } };
