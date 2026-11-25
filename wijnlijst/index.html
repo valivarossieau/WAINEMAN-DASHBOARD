@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Wijnprofielen La Liguria</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Mona+Sans:wght@500;700&display=swap" media="print" onload="this.media='all'">
+<style>
+/* Tokens en maten uit src/app/globals.css en components/waineman/primitives.tsx van de WAINEMAN-site */
+:root{--coal:#1e1416;--ledger:#FAF7F5;--parchment:#F4EFE7;--ash:#EAE3DA;--stat:#EDE7E0;--violet:#820412;--smolder:#a8322c;--salie:#3e5c4b;--goud:#c9a227;--goud-licht:#d9a441;
+--muted:rgba(30,20,22,.64);--soft:rgba(30,20,22,.74);--hair:rgba(62,30,26,.10);--ghost:rgba(62,30,26,.14);
+--blush:linear-gradient(180deg,#f0d6d9 0%,#f7e4cf 52%,#fbf3e8 100%);--belofte:radial-gradient(118% 92% at 5% -6%,#5e1a30 0%,#3d1322 45%,#1d0b12 100%);
+--panel:rgba(17,26,37,.12) 0 0 0 .57px,rgba(16,25,36,.1) 0 .46px 1.14px 0,rgba(16,25,36,.1) 0 1.14px 4.57px 0;--veer:cubic-bezier(.2,.65,.2,1);
+--bg:var(--ledger);--kaart:#fff;--tekst:var(--coal);--accent:var(--violet)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d0b12;--kaart:#2b1420;--parchment:#3d1322;--ash:#4a2533;--tekst:#f7f3eb;--muted:rgba(247,243,235,.64);--soft:rgba(247,243,235,.78);--hair:rgba(247,243,235,.10);--ghost:rgba(247,243,235,.18);--accent:var(--goud-licht);--blush:linear-gradient(180deg,#3d1322 0%,#2b1420 100%)}}
+:root[data-theme="dark"]{--bg:#1d0b12;--kaart:#2b1420;--parchment:#3d1322;--ash:#4a2533;--tekst:#f7f3eb;--muted:rgba(247,243,235,.64);--soft:rgba(247,243,235,.78);--hair:rgba(247,243,235,.10);--ghost:rgba(247,243,235,.18);--accent:var(--goud-licht);--blush:linear-gradient(180deg,#3d1322 0%,#2b1420 100%)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tekst);font:16px/24px Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:-.16px;-webkit-font-smoothing:antialiased}
+.mona{font-family:"Mona Sans",Inter,sans-serif;font-weight:500}
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
+.raster{position:absolute;inset:0;pointer-events:none;display:flex;justify-content:center;overflow:hidden}
+.raster i{position:relative;width:100%;max-width:1128px;display:block}
+.raster i::before,.raster i::after{content:"";position:absolute;top:0;bottom:0;width:1px;background-image:repeating-linear-gradient(to bottom,rgba(0,0,0,.10) 0 3px,transparent 3px 9px)}
+.raster i::before{left:0}.raster i::after{right:0}
+.balk-top{background:var(--coal);color:rgba(255,255,255,.82);font-size:12px;line-height:16px;letter-spacing:.2px;text-align:center;padding:9px 16px;padding-top:calc(9px + env(safe-area-inset-top,0px))}
+.balk-top b{color:#fff;font-weight:500}
+nav.top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--hair)}
+nav.top .wrap{display:flex;align-items:center;gap:12px;height:60px}
+.logo{height:20px;width:auto;display:block}.logo.w{display:none}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .logo.z{display:none}:root:not([data-theme="light"]) .logo.w{display:block}}
+:root[data-theme="dark"] .logo.z{display:none}:root[data-theme="dark"] .logo.w{display:block}
+.meta{font-size:12px;color:var(--muted)}
+.voortgang{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);white-space:nowrap}
+@media (max-width:430px){.meta{display:none}.voortgang .lijn{width:48px!important}}
+.voortgang .lijn{width:72px;height:3px;border-radius:9px;background:var(--ash);overflow:hidden}.voortgang .lijn i{display:block;height:100%;background:var(--accent);width:0;transition:width .4s var(--veer)}
+.eyebrow{font-size:12px;line-height:16px;font-weight:500;letter-spacing:.48px;text-transform:uppercase;color:var(--muted)}
+.eyebrow.rood{color:var(--accent)}
+section{position:relative}
+.hero{padding:56px 0 40px}
+.hero h1{font-family:"Mona Sans",Inter,sans-serif;font-weight:500;font-size:40px;line-height:42px;letter-spacing:-.4px;margin:16px 0 0;max-width:680px;text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.punten{list-style:none;display:flex;flex-wrap:wrap;gap:6px 18px;padding:14px 0 0;margin:18px 0 0;border-top:1px solid var(--hair);font-size:14px;color:var(--soft)}
+.punten li::before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--accent);margin:0 8px 2px 0}
+.lead{font-size:16px;line-height:24px;color:var(--soft);max-width:560px;margin:20px 0 0}
+.paneel{border-radius:16px;background:var(--blush);padding:22px 18px;margin-top:28px}
+.paneel .kaart{background:var(--kaart);border-radius:8px;box-shadow:var(--panel);padding:16px}
+.blok{padding:56px 0}
+.kop{display:grid;gap:14px;margin-bottom:24px}
+.kop h2{font-family:"Mona Sans",Inter,sans-serif;font-weight:500;font-size:30px;line-height:36px;letter-spacing:-.3px;margin:0;text-wrap:balance}
+.kop p{margin:0;color:var(--soft);font-size:15px;line-height:22px}
+@media (min-width:768px){.hero h1{font-size:56px;line-height:56px;letter-spacing:-.56px}.kop{grid-template-columns:1fr 384px;align-items:end;gap:24px}.kop h2{font-size:40px;line-height:48px;letter-spacing:-.4px}.blok{padding:88px 0}}
+.lijst{list-style:none;margin:0;padding:0;background:var(--kaart);border-radius:8px;box-shadow:var(--panel);overflow:hidden}
+.lijst>li{padding:16px;border-top:1px solid var(--hair);transition:background .3s var(--veer)}
+.lijst>li:first-child{border-top:0}
+.lijst>li.ja{background:rgba(62,92,75,.06)}
+.lijst>li.anders{background:rgba(130,4,18,.045)}
+.lijst>li.nee .zin{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--ghost)}
+.zin{margin:0 0 12px;font-size:15px;line-height:22px}
+.zin .k{font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--accent);margin-right:5px}
+.status{display:flex;gap:6px;flex-wrap:wrap}
+.status button{font:inherit;font-size:13px;font-weight:500;height:36px;padding:0 14px;border-radius:999px;border:0;background:transparent;color:var(--tekst);box-shadow:inset 0 0 0 1px var(--ghost);cursor:pointer;transition:background .25s var(--veer),color .25s var(--veer)}
+.status button:hover{background:var(--parchment)}
+.status button.s-ja.aan{background:var(--coal);color:#fff;box-shadow:none}
+:root[data-theme="dark"] .status button.s-ja.aan{background:var(--ledger);color:var(--coal)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .status button.s-ja.aan{background:var(--ledger);color:var(--coal)}}
+.status button.s-nee.aan{background:var(--ash);box-shadow:none}
+.status button.s-anders.aan{background:var(--violet);color:#fff;box-shadow:none}
+input[type=text],textarea{width:100%;font:inherit;font-size:15px;color:var(--tekst);background:var(--kaart);border:0;box-shadow:inset 0 0 0 1px var(--ghost);border-radius:8px;padding:10px 12px}
+textarea{min-height:72px;resize:vertical}
+input:focus,textarea:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.anders-tekst{margin-top:10px}
+.zoek{position:relative}
+.zoek .lijst{position:absolute;left:0;right:0;top:100%;margin-top:4px;max-height:300px;overflow:auto;z-index:30;border-radius:8px}
+.zoek .lijst button{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--hair);padding:9px 12px;font:inherit;font-size:14px;color:var(--tekst);cursor:pointer}
+.zoek .lijst button:hover,.zoek .lijst button.actief{background:var(--parchment)}
+small{color:var(--muted)}
+.chip{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--parchment);border-radius:8px;padding:9px 12px;margin:0 0 8px;font-size:14px;line-height:20px}
+.chip b{font-weight:600}
+.chip button{background:none;border:0;color:var(--accent);font-size:20px;cursor:pointer;padding:0 4px}
+.veld{margin-top:6px}
+.veld .eyebrow{margin-bottom:8px}
+.knop{display:inline-flex;align-items:center;justify-content:center;font:inherit;font-size:14px;font-weight:500;padding:10px 16px;border-radius:999px;border:0;cursor:pointer;background:var(--coal);color:#fff;transition:background .3s var(--veer)}
+.knop:hover{background:#000}
+.knop.ghost{background:transparent;color:var(--tekst);box-shadow:inset 0 0 0 1px var(--ghost)}
+.knop.ghost:hover{background:var(--parchment)}
+.eigen{margin-top:14px;display:grid;gap:8px}
+.eigen .knop{justify-self:start}
+.donker{background:var(--belofte);color:#f7f3eb;overflow:hidden}
+.donker .raster i::before,.donker .raster i::after{background-image:repeating-linear-gradient(to bottom,rgba(255,255,255,.10) 0 3px,transparent 3px 9px)}
+.donker .eyebrow{color:rgba(255,255,255,.68)}
+.donker .kop p{color:rgba(255,255,255,.74)}
+.donker .knop{background:var(--ledger);color:var(--coal)}.donker .knop:hover{background:#fff}
+.donker .knop.ghost{background:transparent;color:#f7f3eb;box-shadow:inset 0 0 0 1px rgba(255,255,255,.3)}
+.donker textarea,.donker input{background:rgba(255,255,255,.06);color:#f7f3eb;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.14);border-radius:8px;overflow:hidden;margin:8px 0 20px}
+.stats div{background:rgba(29,11,18,.55);padding:16px}
+.stats b{display:block;font-family:"Mona Sans",Inter,sans-serif;font-weight:500;font-size:32px;line-height:36px}
+.stats span{font-size:12px;color:rgba(255,255,255,.68)}
+.melding{border-radius:8px;padding:12px 14px;font-size:14px;line-height:20px;background:rgba(255,255,255,.08);margin:0 0 16px}
+.melding.licht{background:var(--parchment);color:var(--soft);margin-top:20px}
+.opslag{font-size:12px;line-height:16px;font-weight:500;padding:3px 9px;border-radius:999px;white-space:nowrap}.opslag.ok{background:rgba(62,92,75,.14);color:var(--salie)}.opslag.bezig{background:var(--ash);color:var(--soft)}.opslag.fout{background:var(--violet);color:#fff}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .opslag.ok{color:#8fc3a5}}:root[data-theme="dark"] .opslag.ok{color:#8fc3a5}@media (max-width:430px){#teller{display:none}}.zonder-sleutel{max-width:560px;margin:80px auto;padding:0 24px}.importrij{margin-top:14px;font-size:14px;color:rgba(255,255,255,.75)}.importrij input{margin-top:6px;color:inherit}
+footer{padding:28px 0 calc(28px + env(safe-area-inset-bottom,0px));font-size:12px;color:var(--muted);border-top:1px solid var(--hair)}
+.controle{margin-bottom:14px}
+.controle .titel{font-family:"Mona Sans",Inter,sans-serif;font-weight:500;font-size:20px;line-height:26px;margin:4px 0 2px}
+.controle .vraag{color:var(--soft);font-size:15px;margin:0 0 12px}
+.label{margin:0 0 8px}
+.soort{display:inline-block;font-size:11px;line-height:16px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;padding:2px 8px;border-radius:999px}
+.soort.hard{background:var(--coal);color:#fff}.soort.model{background:transparent;color:var(--muted);box-shadow:inset 0 0 0 1px var(--ghost)}
+:root[data-theme="dark"] .soort.hard{background:var(--ledger);color:var(--coal)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .soort.hard{background:var(--ledger);color:var(--coal)}}
+.lek{margin:-4px 0 12px;font-size:13px;line-height:19px;color:var(--muted)}.lek b{font-weight:600;color:var(--soft)}
+.flessen{margin-top:14px;padding-top:12px;border-top:1px dashed var(--ghost)}.flessen .eyebrow{margin-bottom:8px}
+.getal{display:flex;align-items:center;gap:8px;max-width:180px}.getal span{color:var(--muted);font-weight:500}
+.getal input{width:100%;font:inherit;font-size:15px;color:var(--tekst);background:var(--kaart);border:0;box-shadow:inset 0 0 0 1px var(--ghost);border-radius:8px;padding:8px 10px}
+.getal.klein{max-width:96px;margin-left:auto}.getal.klein input{padding:6px 8px}
+.let{margin:8px 0 0;font-size:13px;color:var(--violet)}
+.status.keuze button{height:auto;min-height:36px;padding:7px 14px;text-align:left;line-height:18px}
+.lijst .zin small{color:var(--muted);font-size:13px}
+.mist{box-shadow:inset 3px 0 0 var(--violet)!important;background:rgba(130,4,18,.06)!important}
+.paneel .kaart.mist,.lijst.mist{box-shadow:0 0 0 2px var(--violet)!important}
+.donker .mist{box-shadow:inset 3px 0 0 var(--goud-licht)!important;background:transparent!important;padding-left:10px}
+.flits{animation:flits 1.6s ease}@keyframes flits{0%,40%{outline:3px solid var(--goud-licht);outline-offset:2px}100%{outline-color:transparent}}
+ul.open{list-style:none;margin:8px 0 16px;padding:0;display:grid;gap:6px}
+ul.open button{width:100%;text-align:left;font:inherit;font-size:14px;line-height:20px;color:#f7f3eb;background:rgba(255,255,255,.07);border:0;border-radius:8px;padding:9px 12px;cursor:pointer}
+ul.open button small{display:block;color:rgba(255,255,255,.6)}
+label.geen{display:flex;gap:8px;align-items:center;margin-top:10px;font-size:14px;color:var(--soft)}
+#teller{cursor:pointer}
+.knop.groot{display:flex;width:100%;font-size:17px;padding:16px 20px;margin:0 0 10px}
+.knop.klein{font-size:13px;padding:8px 14px}
+.uitleg-terug{font-size:14px;color:rgba(255,255,255,.74);margin:4px 0 0}
+.waarschuwing{background:#820412;color:#fff;font-size:14px;line-height:20px;padding:10px 16px;text-align:center}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+.raster{display:none}
+.woordmerk{font-family:"Mona Sans",Inter,sans-serif;font-weight:700;letter-spacing:.14em;font-size:15px;color:var(--tekst)}
+.telling{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 12px}
+.telling div{background:var(--parchment);border-radius:8px;padding:10px 12px}
+.telling b{display:block;font-family:"Mona Sans",Inter,sans-serif;font-weight:500;font-size:24px;line-height:28px}
+.telling span{font-size:12px;line-height:16px;color:var(--muted)}
+.tabs{margin:0 0 12px}.tabs button small{color:inherit;opacity:.6;margin-left:4px}
+.zoekrij{display:grid;gap:4px;margin:0 0 16px}
+.stand{margin:0 0 14px;font-size:15px;color:var(--soft)}
+.weet{margin:0 0 12px;font-size:13px;line-height:19px;color:var(--soft)}
+.weet .k,.zin .k{display:block;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--accent);margin-bottom:2px}
+.velden{display:grid;gap:12px}
+.vrij .eyebrow{margin-bottom:6px}
+.vrij .status button{min-height:34px;padding:6px 13px}
+.onder label.geen{margin-top:0;font-size:13px}
+.knop.meer{margin-top:14px;width:100%}
+.vrij-breed{grid-column:1/-1}.vrij-breed textarea{min-height:56px}.vrij-breed .eyebrow small{text-transform:none;letter-spacing:0;font-weight:400}
+@media (min-width:768px){.velden{grid-template-columns:1fr 1fr}.telling{grid-template-columns:repeat(6,1fr)}}
+</style>
+</head>
+<body>
+<noscript><div style="padding:24px;font:16px sans-serif">Open deze pagina in Safari of Chrome.</div></noscript>
+<div class="balk-top">Voor de sommelier van <b>La Liguria</b> · per fles een paar tikken, stoppen en later verder mag</div>
+<nav class="top"><div class="wrap"><span class="woordmerk">WAINEMAN</span><span class="meta">AI-sommelier</span><div class="voortgang"><span id="opslag" class="opslag bezig" role="status" aria-live="polite">Laden…</span><span id="teller">0 van 0</span><span class="lijn"><i id="balk"></i></span></div></div></nav>
+<main id="pagina"></main>
+<footer><div class="wrap"><span id="status">Elke tik wordt automatisch online bewaard</span> · WAINEMAN</div></footer>
+<script src="data.js"></script>
+<script>
+window.SYNC = (function(){
+  var BASIS = "https://joucxqkpyhpxazdhhiic.supabase.co/rest/v1/rpc/";
+  var KEY = "sb_publishable_Vf6AtZKjBUpyuII1BNeQzw_i8NRYBGc";
+  var q = new URLSearchParams(location.search), h = new URLSearchParams(location.hash.slice(1));
+  var sleutel = q.get("k") || h.get("k") || "";
+  function rpc(naam, body, keep){
+    return fetch(BASIS + naam, { method: "POST", keepalive: !!keep, cache: "no-store",
+      headers: { "apikey": KEY, "Authorization": "Bearer " + KEY, "Content-Type": "application/json" }, body: JSON.stringify(body) })
+      .then(function(r){ return r.text().then(function(t){ if (!r.ok) { var e = new Error("opslag " + r.status + " " + t.slice(0, 200)); e.status = r.status; throw e; } return t ? JSON.parse(t) : null; }); });
+  }
+  return {
+    sleutel: sleutel,
+    haal: function(){ return rpc("profiel_haal", { p_sleutel: sleutel }); },
+    bewaar: function(wijnen, meta, keep){ return rpc("profiel_bewaar", { p_sleutel: sleutel, p_wijnen: wijnen, p_meta: meta }, keep); }
+  };
+})();
+</script>
+<script>
+/* Invullijst wijnprofielen voor de sommelier. Per fles alleen vaste keuzes, zodat elk antwoord direct bouwbaar is. */
+const DATA = window.DATA;
+const W = DATA.wijnen, PER_ID = Object.fromEntries(W.map(w => [w.id, w]));
+const SLEUTEL = "waineman-wijnprofielen-online-" + (window.SYNC.sleutel || "geen").slice(0, 12);
+const $ = id => document.getElementById(id);
+const el = (tag, cls, inner) => { const e = document.createElement(tag); if (cls) e.className = cls; if (inner != null) e.innerHTML = inner; return e; };
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const normaal = s => (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[’'`]/g, "");
+const euro = c => c == null ? "prijs onbekend" : "€ " + (c / 100).toFixed(2).replace(".", ",");
+const KLEURNAAM = { wit: "wit", rood: "rood", rose: "rosé", onbekend: "kleur onbekend" };
+
+/* De velden. Elk veld: sleutel, vraag, opties [waarde, label]. */
+const V = {
+  kleur: ["kleur", "Welke kleur?", [["wit", "Wit"], ["rose", "Rosé"], ["rood", "Rood"]]],
+  dosage: ["dosage", "Hoe droog?", [["nature", "Brut nature / pas dosé"], ["extrabrut", "Extra brut"], ["brut", "Brut"], ["extradry", "Extra dry"], ["dry", "Dry / demi-sec"], ["zoet", "Zoet"]]],
+  zuur: ["zuur", "Fris, zuurtje", [["laag", "Weinig"], ["middel", "Middel"], ["hoog", "Veel"]]],
+  mineraal: ["mineraal", "Mineraal, tintelend", [["laag", "Weinig"], ["middel", "Middel"], ["hoog", "Veel"]]],
+  fruit: ["fruit", "Fruitig", [["laag", "Weinig"], ["middel", "Middel"], ["hoog", "Veel"]]],
+  hout: ["hout", "Hout", [["geen", "Geen"], ["licht", "Een beetje"], ["duidelijk", "Duidelijk"]]],
+  body: ["body", "Body", [["licht", "Licht"], ["middel", "Middel"], ["vol", "Vol, stevig"]]],
+  tannine: ["tannine", "Tannine", [["laag", "Weinig"], ["middel", "Een beetje"], ["hoog", "Veel"]]],
+  alcohol: ["alcohol", "Alcohol (los van hoe zwaar hij smaakt)", [["laag", "Onder 12,5%"], ["middel", "12,5 tot 14%"], ["hoog", "14% of meer"]]],
+  zoet: ["zoet", "Zoet", [["droog", "Droog"], ["halfdroog", "Halfdroog"], ["halfzoet", "Halfzoet"], ["zoet", "Zoet"]]],
+};
+function groep(w) {
+  const k = kleurVan(w);
+  if (w.s === "mousserend") return "bubbels";
+  if ((w.w?.zoet || 0) >= 4) return "zoet";
+  if (k === "onbekend") return "onbekend";
+  return k;
+}
+function kleurVan(w) { return (S.a[w.id]?.kleur) || w.k; }
+function veldenVoor(w) {
+  const l = [];
+  if (w.k === "onbekend") l.push(V.kleur);
+  const k = kleurVan(w), bubbel = w.s === "mousserend";
+  l.push(V.zuur, V.mineraal, V.fruit, V.hout, V.body);
+  if (k === "rood" || k === "rose") l.push(V.tannine);
+  l.push(bubbel ? V.dosage : V.zoet, V.alcohol);
+  return l;
+}
+const GROEPEN = [["alles", "Alle wijnen"], ["belangrijk", "Vaakst gekozen"], ["wit", "Wit"], ["rood", "Rood"], ["rose", "Rosé"], ["bubbels", "Bubbels"], ["zoet", "Dessert en zoet"], ["onbekend", "Kleur onbekend"]];
+
+let S;
+function laad() { try { const t = localStorage.getItem(SLEUTEL); if (t) return JSON.parse(t); } catch (e) {} return null; }
+S = laad() || { sessie: "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7), naam: "", start: new Date().toISOString(), a: {}, tab: "alles" };
+S.a ||= {};
+let DL = null, klok = null, bezig = false, geladen = false, fouten = 0, laatsteOk = null;
+let GESYNCT = {};   // id -> JSON zonder t, zoals de server het heeft
+let META_GESYNCT = "";
+const zonderT = a => { const c = { ...a }; delete c.t; return JSON.stringify(c); };
+function status(t) { const e = $("status"); if (e) e.textContent = t; }
+function opslagLabel(soort, tekst) { const e = $("opslag"); if (!e) return; e.className = "opslag " + soort; e.textContent = tekst; }
+function schrijfLokaal() { try { localStorage.setItem(SLEUTEL, JSON.stringify(S)); } catch (e) {} }
+function meta() { return { naam: S.naam || "", kaartVersie: DATA.pub, start: S.start, sessie: S.sessie, ingevuld: gedaan(), totaal: W.length }; }
+function wijzigingen() {
+  const uit = {}; const nu = Date.now();
+  for (const [id, a] of Object.entries(S.a)) {
+    if (!a || !PER_ID[id]) continue;
+    const z = zonderT(a);
+    if (GESYNCT[id] !== z) { a.t = Math.max(nu, (a.t || 0) + 1); uit[id] = { ...a }; }
+  }
+  return uit;
+}
+function vies() { if (!geladen) return false; for (const [id, a] of Object.entries(S.a)) { if (a && PER_ID[id] && GESYNCT[id] !== zonderT(a)) return true; } return JSON.stringify(meta()) !== META_GESYNCT; }
+function bewaar() { S.bijgewerkt = new Date().toISOString(); schrijfLokaal(); clearTimeout(vgKlok); vgKlok = setTimeout(voortgang, 150); plan(600); }
+let vgKlok = null;
+function plan(ms) { if (!geladen || !SYNC.sleutel) return; clearTimeout(klok); opslagLabel("bezig", "Opslaan…"); status("Bezig met opslaan…"); klok = setTimeout(schrijf, ms); }
+async function schrijf(keep) {
+  if (!geladen || !SYNC.sleutel) return;
+  if (bezig) { plan(400); return; }
+  const w = wijzigingen(), m = meta(), mj = JSON.stringify(m);
+  if (!Object.keys(w).length && mj === META_GESYNCT) { toonOk(); return; }
+  bezig = true; schrijfLokaal();
+  const verstuurd = Object.fromEntries(Object.entries(w).map(([id, a]) => [id, zonderT(a)]));
+  try {
+    await SYNC.bewaar(w, m, keep);
+    for (const [id, z] of Object.entries(verstuurd)) GESYNCT[id] = z;
+    META_GESYNCT = mj; fouten = 0; laatsteOk = new Date();
+    bezig = false;
+    if (vies()) plan(300); else toonOk();
+  } catch (e) {
+    bezig = false; fouten++;
+    opslagLabel("fout", "Niet opgeslagen");
+    status("Nog niet online bewaard (geen verbinding?). Hij probeert het steeds opnieuw; je tikken staan veilig op dit apparaat.");
+    clearTimeout(klok); klok = setTimeout(schrijf, Math.min(30000, 3000 * fouten));
+  }
+}
+function toonOk() { const t = (laatsteOk || new Date()).toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" }); opslagLabel("ok", "Opgeslagen ✓"); status("Alles online opgeslagen, laatst om " + t + ". Je kunt de pagina gewoon sluiten."); }
+try {
+  addEventListener("pagehide", () => { schrijfLokaal(); if (vies()) schrijf(true); });
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") { schrijfLokaal(); if (vies()) { clearTimeout(klok); schrijf(true); } } });
+  addEventListener("beforeunload", e => { schrijfLokaal(); if (vies() || bezig) { schrijf(true); e.preventDefault(); e.returnValue = "Nog niet alles is opgeslagen."; return e.returnValue; } });
+  addEventListener("online", () => { if (vies()) plan(100); });
+} catch (e) {}
+function voegSamen(serverWijnen) {
+  let veranderd = 0;
+  for (const [id, sv] of Object.entries(serverWijnen || {})) {
+    if (!PER_ID[id] || !sv || typeof sv !== "object") continue;
+    const lv = S.a[id];
+    if (!lv || !Object.keys(lv).length || (sv.t || 0) > (lv.t || 0)) { S.a[id] = { ...sv }; veranderd++; }
+    GESYNCT[id] = zonderT(sv);
+  }
+  return veranderd;
+}
+async function laadVanServer() {
+  if (!SYNC.sleutel) return;
+  opslagLabel("bezig", "Laden…");
+  try {
+    const r = await SYNC.haal();
+    if (!r) { opslagLabel("fout", "Link onjuist"); status("Deze link is niet (meer) geldig. Vraag Valentijn om de juiste link."); return; }
+    const n = voegSamen(r.wijnen);
+    if (!S.naam && r.meta?.naam) S.naam = r.meta.naam;
+    META_GESYNCT = JSON.stringify({ ...meta(), naam: r.meta?.naam || "" });
+    geladen = true; schrijfLokaal();
+    if (n) teken();
+    voortgang();
+    if (vies()) plan(200); else { laatsteOk = r.bijgewerkt ? new Date(r.bijgewerkt) : new Date(); toonOk(); }
+  } catch (e) {
+    opslagLabel("fout", "Geen verbinding");
+    status("Kan de opgeslagen antwoorden nu niet ophalen. Opnieuw proberen over 5 seconden…");
+    setTimeout(laadVanServer, 5000);
+  }
+}
+async function importeer(bestand) {
+  try {
+    const j = JSON.parse(await bestand.text());
+    const wijnen = j.wijnen || j.a || {};
+    let n = 0; const nu = Date.now();
+    for (const [id, x] of Object.entries(wijnen)) {
+      if (!PER_ID[id] || !x || typeof x !== "object") continue;
+      const a = { ...x }; ["naam", "jaargang", "kleurKaart", "soort", "compleet"].forEach(k => delete a[k]);
+      if (!Object.keys(a).length) continue;
+      const lv = S.a[id];
+      if (lv && Object.keys(lv).filter(k => k !== "t").length) continue; // wat hier al staat, wint
+      a.t = nu; S.a[id] = a; n++;
+    }
+    if (j.naam && !S.naam) S.naam = j.naam;
+    bewaar(); teken();
+    return n;
+  } catch (e) { return -1; }
+}
+
+const alles = w => { const a = S.a[w.id] || {}; return a.onbekend || veldenVoor(w).every(([k]) => a[k]); };
+const klaar = w => { const a = S.a[w.id] || {}; return Object.keys(a).some(k => a[k]); };
+const gedaan = () => W.filter(w => klaar(w)).length;
+
+function weetTekst(w) {
+  const x = w.w || {}, d = [];
+  if (x.body) d.push("body " + x.body);
+  if (x.zuur) d.push("fris");
+  if (x.hout) d.push("hout");
+  if (x.alc) d.push(String(x.alc).replace(".", ",") + "% alcohol");
+  if (x.zoet >= 4) d.push("zoet");
+  if (x.aroma) d.push(x.aroma.join(", "));
+  return d.length ? d.join(" · ") : "";
+}
+
+function knoppen(opties, huidig, kies) {
+  const d = el("div", "status keuze");
+  opties.forEach(([v, label]) => { const b = el("button", "s-ja" + (huidig === v ? " aan" : ""), esc(label)); b.type = "button";
+    b.onclick = () => { const nieuw = huidig === v ? null : v; huidig = nieuw; d.querySelectorAll("button").forEach(x => x.classList.remove("aan")); if (nieuw) b.classList.add("aan"); kies(nieuw); }; d.append(b); });
+  return d;
+}
+
+function flesKaart(w) {
+  const li = el("li", klaar(w) ? "ja" : ""); li.id = "w-" + w.id;
+  const a = () => (S.a[w.id] ||= {});
+  const kop = el("div", "wkop");
+  kop.append(el("p", "zin", `<b>${esc(w.n)}</b>${w.j ? " " + w.j : ""} <small>${esc(w.p || "")} · ${euro(w.e)}${w.ml ? " · " + w.ml + " ml" : ""} · ${KLEURNAAM[w.k] || w.k}${w.s === "mousserend" ? ", bubbels" : ""}</small>`));
+  if (w.d?.length || w.r) kop.append(el("p", "lek", esc([w.d?.join(", "), w.r].filter(Boolean).join(" · "))));
+  const wt = weetTekst(w);
+  kop.append(el("p", "weet", wt ? `<span class="k">Het systeem weet nu</span>${esc(wt)} <small>(webshoptekst)</small>` : `<span class="k">Het systeem weet nu</span>niets over de smaak`));
+  li.append(kop);
+  const velden = el("div", "velden");
+  const teken = () => {
+    velden.innerHTML = "";
+    if (S.a[w.id]?.onbekend) { velden.append(el("p", "lek", "Gemarkeerd als: ken ik niet goed genoeg.")); }
+    else veldenVoor(w).forEach(([k, vraag, opties]) => {
+      const rij = el("div", "vrij"); rij.append(el("div", "eyebrow", esc(vraag)));
+      rij.append(knoppen(opties, S.a[w.id]?.[k] || null, v => { if (v) a()[k] = v; else delete a()[k]; if (k === "kleur") { bewaar(); teken(); } else bewaar(); li.className = klaar(w) ? "ja" : ""; }));
+      velden.append(rij);
+    });
+    if (!S.a[w.id]?.onbekend) {
+      [["eten", "Eten erbij <small>(gerecht van de kaart of iets anders)</small>", "Bijv. orata, vitello tonnato, harde kazen"], ["suggestie", "Mijn suggestie of opmerking <small>(hoe je hem aanraadt, wanneer juist niet)</small>", "Bijv. mooi als alternatief voor de Gavi; niet bij pittig"]].forEach(([k, kop, ph]) => {
+        const vt = el("div", "vrij vrij-breed"); vt.append(el("div", "eyebrow", kop));
+        const ta = el("textarea"); ta.rows = 2; ta.placeholder = ph; ta.value = S.a[w.id]?.[k] || "";
+        ta.oninput = () => { const v = ta.value; if (v.trim()) a()[k] = v; else delete a()[k]; bewaar(); li.className = klaar(w) ? "ja" : ""; };
+        vt.append(ta); velden.append(vt); });
+    }
+    const onder = el("div", "onder");
+    const ok = el("label", "geen", `<input type="checkbox"${S.a[w.id]?.onbekend ? " checked" : ""}> Ken ik niet goed genoeg`);
+    ok.querySelector("input").onchange = e => { if (e.target.checked) a().onbekend = true; else delete a().onbekend; bewaar(); li.className = klaar(w) ? "ja" : ""; teken(); };
+    onder.append(ok); velden.append(onder);
+  };
+  teken(); li.append(velden);
+  return li;
+}
+
+let toon = 15;
+function lijstVoor(tab, zoek) {
+  let l = W;
+  if (tab === "belangrijk") l = W.filter(w => w.f > 0);
+  else if (tab !== "alles") l = W.filter(w => groep(w) === tab);
+  if (zoek) { const z = normaal(zoek).split(/\s+/).filter(Boolean); l = W.filter(w => { const t = normaal([w.n, w.p, w.j, (w.d || []).join(" "), w.r].join(" ")); return z.every(x => t.includes(x)); }); }
+  if (S.alleenOpen) l = l.filter(w => !klaar(w));
+  return l;
+}
+function tekenLijst() {
+  const doel = $("flessen"); doel.innerHTML = "";
+  const l = lijstVoor(S.tab, $("zoekveld")?.value || "");
+  const ul = el("ul", "lijst"); l.slice(0, toon).forEach(w => ul.append(flesKaart(w))); doel.append(ul);
+  if (!l.length) doel.append(el("p", "melding licht", "Geen flessen in deze selectie."));
+  if (l.length > toon) { const m = el("button", "knop ghost meer", `Volgende ${Math.min(15, l.length - toon)} flessen (nog ${l.length - toon})`); m.type = "button"; m.onclick = () => { toon += 15; const y = scrollY; tekenLijst(); scrollTo(0, y); }; doel.append(m); }
+}
+function tabs() {
+  const d = $("tabs"); d.innerHTML = "";
+  GROEPEN.forEach(([k, naam]) => { const n = k === "belangrijk" ? W.filter(w => w.f > 0).length : k === "alles" ? W.length : W.filter(w => groep(w) === k).length; if (!n) return;
+    const b = el("button", "s-ja" + (S.tab === k ? " aan" : ""), `${esc(naam)} <small>${n}</small>`); b.type = "button";
+    b.onclick = () => { S.tab = k; toon = 15; if ($("zoekveld")) $("zoekveld").value = ""; schrijfLokaal(); tabs(); tekenLijst(); }; d.append(b); });
+}
+function voortgang() {
+  const n = gedaan(), b = W.filter(w => w.f > 0), nb = b.filter(w => S.a[w.id] && klaar(w)).length;
+  $("teller").textContent = `${n} van ${W.length}`; $("balk").style.width = `${(n / W.length) * 100}%`;
+  const v = $("stand"); if (v) v.innerHTML = `<b>${n}</b> van de ${W.length} wijnen ingevuld. Niets is verplicht: vul in wat je weet. De wijnen die het systeem het vaakst kiest, staan bovenaan (${nb} van ${b.length} gedaan).`;
+}
+
+function exportAlles() {
+  const wijnen = {};
+  for (const [id, a] of Object.entries(S.a)) { if (!a || !Object.keys(a).length) continue; const w = PER_ID[id]; if (!w) continue;
+    wijnen[id] = { naam: w.n, jaargang: w.j, kleurKaart: w.k, soort: w.s, compleet: alles(w), ...a }; }
+  return { soort: "waineman-wijnprofielen", versie: 1, kaartVersie: DATA.pub, naam: S.naam || "", sessie: S.sessie, start: S.start, bijgewerkt: S.bijgewerkt || null,
+    telling: { ingevuld: gedaan(), totaal: W.length }, compleet: gedaan() === W.length, wijnen };
+}
+async function bewaarBestand(naam, data) {
+  if (DL) { try { await DL.save({ filename: naam, data }); return true; } catch (e) {} }
+  try { const url = URL.createObjectURL(new Blob([data], { type: "application/json" })); const a = document.createElement("a"); a.href = url; a.download = naam; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 4000); return true; } catch (e) { return false; }
+}
+async function kopieer(txt) {
+  try { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(txt); return true; } } catch (e) {}
+  try { const t = document.createElement("textarea"); t.value = txt; t.setAttribute("readonly", ""); t.style.position = "fixed"; t.style.opacity = "0"; document.body.appendChild(t); t.select(); t.setSelectionRange(0, txt.length); const ok = document.execCommand("copy"); t.remove(); return ok; } catch (e) { return false; }
+}
+
+function teken() {
+  const p = $("pagina"); p.innerHTML = "";
+  const kennis = W.filter(w => w.w && (w.w.body || w.w.zuur || w.w.hout)).length;
+  const h = el("section", "hero"); const wr = el("div", "wrap");
+  wr.append(el("div", "eyebrow rood", "Wijnprofielen · winterkaart"),
+    el("h1", "", "Wat het systeem van <em>elke fles</em> weet"),
+    el("p", "lead", "Per wijn staat wat het systeem nu weet. Tik aan wat voor wijn het is, en typ welk eten erbij past en wat jij erbij zou zeggen. Zo kiest het systeem op dezelfde woorden als jij: fris, mineraal, fruitig, hout, body en tannine. Alle wijnen van de kaart staan erin; bovenaan de wijnen die het systeem het vaakst kiest. Niets is verplicht. Je kunt stoppen en later verder: elke tik wordt direct online bewaard, ook als je de pagina sluit. Open later gewoon dezelfde link, op welk apparaat ook."));
+  const pan = el("div", "paneel"); const kk = el("div", "kaart");
+  kk.append(el("div", "eyebrow", "Wat het systeem nu weet, van de " + W.length + " wijnen"));
+  const t = el("div", "telling");
+  [["Naam, prijs, producent", W.length], ["Druif (na correctie)", W.filter(w => w.d?.length).length], ["Iets over de smaak", kennis], ["Hout zeker niet", 0], ["Tannine", 0], ["Per glas", 0]].forEach(([n, v]) => t.append(el("div", "", `<b>${v}</b><span>${n}</span>`)));
+  kk.append(t, el("p", "lek", "Wat er over smaak bekend is, komt uit webshopteksten, en meestal maar in één richting: wel “vol” of “hout”, nooit “licht” of “geen hout”. Mineraliteit staat er bijna nergens bij."));
+  const nm = el("input"); nm.type = "text"; nm.placeholder = "Je voornaam"; nm.value = S.naam || ""; nm.oninput = () => { S.naam = nm.value; bewaar(); }; nm.style.marginTop = "10px";
+  kk.append(nm); pan.append(kk); wr.append(pan); h.append(wr); p.append(h);
+
+  const b = el("section", "blok"); const bw = el("div", "wrap");
+  bw.append(el("p", "stand", "")); bw.lastChild.id = "stand";
+  const tb = el("div", "status tabs"); tb.id = "tabs"; bw.append(tb);
+  const zk = el("div", "zoekrij"); const zi = el("input"); zi.type = "text"; zi.id = "zoekveld"; zi.placeholder = "Zoek op naam, producent of druif";
+  let zt = null; zi.oninput = () => { clearTimeout(zt); zt = setTimeout(() => { toon = 15; tekenLijst(); }, 200); };
+  const ao = el("label", "geen", `<input type="checkbox"${S.alleenOpen ? " checked" : ""}> Alleen wat nog open is`); ao.querySelector("input").onchange = e => { S.alleenOpen = e.target.checked; schrijfLokaal(); toon = 15; tekenLijst(); };
+  zk.append(zi, ao); bw.append(zk);
+  const fl = el("div", ""); fl.id = "flessen"; bw.append(fl); b.append(bw); p.append(b);
+
+  const d = el("section", "blok donker"); const dw = el("div", "wrap");
+  dw.append(el("div", "kop", `<div><div class="eyebrow">Opslaan</div><h2>Je hoeft niets te versturen</h2></div><p>Alles wat je aantikt of typt, wordt automatisch online opgeslagen en komt zo bij Valentijn. Rechtsboven zie je “Opgeslagen ✓”. Stoppen en later verder kan altijd via dezelfde link.</p>`));
+  const k3 = el("button", "knop ghost groot", "Reservekopie downloaden"); k3.type = "button";
+  k3.onclick = async () => { schrijfLokaal(); const ok = await bewaarBestand("wijnprofielen-tussenstand-" + new Date().toISOString().slice(0, 16).replace(/[:T]/g, "-") + ".json", JSON.stringify(exportAlles(), null, 1)); k3.textContent = ok ? "Reservekopie gedownload ✓" : "Downloaden lukt hier niet"; };
+  const imp = el("label", "importrij", `Eerder een tussenstand gedownload? Zet hem er hier weer in:<br>`); const fi = el("input"); fi.type = "file"; fi.accept = ".json,application/json";
+  fi.onchange = async () => { const f = fi.files?.[0]; if (!f) return; const n = await importeer(f); const l = document.querySelector(".importrij") || imp; l.firstChild.textContent = n < 0 ? "Dit bestand kan ik niet lezen. " : `${n} wijnen uit het bestand toegevoegd. `; fi.value = ""; };
+  imp.append(fi);
+  dw.append(k3, imp); d.append(dw); p.append(d);
+  tabs(); tekenLijst(); voortgang();
+}
+if (!SYNC.sleutel) {
+  $("pagina").innerHTML = '<div class="zonder-sleutel"><h1 class="mona">Deze link is niet compleet</h1><p>Open de lijst met de volledige link die je van Valentijn kreeg. Daarin zit je persoonlijke code, zodat je antwoorden bewaard blijven.</p></div>';
+  opslagLabel("fout", "Geen code");
+} else {
+  try { teken(); } catch (e) { $("pagina").innerHTML = '<div class="wrap" style="padding:40px 24px">Deze weergave kan de lijst niet tonen. Open de pagina in Safari of Chrome.</div>'; }
+  laadVanServer();
+}
+</script>
+</body>
+</html>
